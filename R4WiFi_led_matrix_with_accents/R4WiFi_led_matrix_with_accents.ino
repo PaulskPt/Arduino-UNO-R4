@@ -16,8 +16,8 @@
  * Date: 14/6/2023
  *
  * Modified by: Paulus H.J. Schulinck, Github @paulskpt
- * Added code for using some characters with accents (a´, í, ó and ô. More to add.
- * For better accenting, e.g. for accent-circunflex, it had been better to have characters
+ * Added code for using some characters with accents (a´, í, ó and ô. More to add).
+ * For better accenting, e.g. for accent-circumflex, it had been better to have characters
  * to be 5 columns width.
  * Date: 12/8/2023
  */
@@ -236,7 +236,7 @@ uint8_t led_matrix_putch(uint8_t *p_buffer, uint16_t buffer_size, uint8_t ch)
     Serial.print("accent_flag= ");
     Serial.println(accent_flag);
   #endif
-    if (accent_flag == true) return 0;  // it's a ch with an accent: go to get the next ch
+    if (accent_flag == true) return 0;  // it's a ch with an accent: get the next ch
   }
   if (accent_flag == true)
   {
