@@ -253,7 +253,7 @@ uint8_t led_matrix_putch(uint8_t *p_buffer, uint16_t buffer_size, uint8_t ch)
       ch = 129; // index for ó
     else if (ch == 148)
       ch = 130; // index for ô
-    offset = 6*(ch-32);
+    offset = 6*(ch-32);  // e.g. if ch is 127 then offset is 6*(127-32) = 6*95 = 570
   }
   else 
   {
