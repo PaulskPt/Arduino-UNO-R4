@@ -18,7 +18,7 @@
  * Modified by: Paulus H.J. Schulinck, Github @paulskpt
  * Added code for using some characters with accents (a´, í, ó and ô. More to add).
  * For better accenting, e.g. for accent-circumflex, it had been better to have characters
- * to be 5 columns width.
+ * to be 5 columns wide.
  * Date: 12/8/2023
  */
 
