@@ -11,3 +11,11 @@ Put
 at the top of the sketch to route Serial to pins 0 and 1.
 
 On the WiFi Serial2 is connected to the Wi-Fi module.
+
+Fork additions by @PaulskPt:
+- Added folder R4WiFi_led_matrix_with_accents;
+- Added in this folder the sketch: R4WiFi_led_matrix_with_accents.ino.
+This is just a try. To use accents I think it should be better to 
+define characters 5-column wide (especially for use of the accent-circumflex).
+I am thinking about definining a character set with 5-column characters.
+
