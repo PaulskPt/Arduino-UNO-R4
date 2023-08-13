@@ -9,7 +9,7 @@
  * 3. Open the Serial Monitor.
  * 
  * Initial author: Sebastian Romero @sebromero
-  * 
+ * 
  * Modifications by @PaulskPt (Github)
  * Mods to display the received NTP datetime stamp to the 8x12 led matrix
  * The interval for NTP sync is defined by I_TM.
