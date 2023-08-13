@@ -30,7 +30,6 @@
 // Leading spaces ensure starting at the right.
 uint8_t banner_text[] = "  Arduino UNO R4 WiFi á í ó ô ç";
 
-
 // First value is the width of a character in columns. This allows for
 // easy tight spacing on the display (TTF kind of thing).
 
@@ -259,10 +258,6 @@ uint8_t led_matrix_putch(uint8_t *p_buffer, uint16_t buffer_size, uint8_t ch)
     else
       ch= 32; // set index for a space
     offset = 6*(ch-32);  // e.g. if ch is 127 then offset is 6*(127-32) = 6*95 = 570
-  }
-  else 
-  {
-    offset = 6*ch;
   }
   else 
   {
