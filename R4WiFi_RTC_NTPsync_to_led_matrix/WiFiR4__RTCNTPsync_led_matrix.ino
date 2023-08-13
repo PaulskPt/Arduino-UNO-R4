@@ -511,7 +511,7 @@ void pr_banner()
 
 bool led_is_on = false;
 
-#define led_sw_cnt 150  // Defines limit of time count led stays on
+#define led_sw_cnt 20  // Defines limit of time count led stays on
 
 void led_on() {
   //blinks the built-in LED every second
@@ -580,7 +580,7 @@ void loop(){
     }
   }
 
-  if ((scroll > 0 && scroll < led_sw_cnt) && (led_is_on == false))
+  if ((scroll > 0 && scroll < (tot_width-led_sw_cnt)) && (led_is_on == false))
     led_on();
   
   // Refresh display
@@ -591,18 +591,10 @@ void loop(){
   {
     t_prev = millis();
     scroll += 1; // Scroll to the left.
-    if ((scroll >= led_sw_cnt) && (led_is_on == true))
+    if ((scroll >= (tot_width-led_sw_cnt)) && (led_is_on == true))
       led_off();
     if (scroll>5*strlen((char*)banner_text))
-    {
-      /*
-      Serial.print("scroll= ");
-      Serial.println(scroll);
-      Serial.print("tot_width= ");
-      Serial.println(tot_width);
-      */
       scroll = 0; // restart
-    }
   }
 
 }
