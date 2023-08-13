@@ -35,7 +35,6 @@
 // #define my_debug  (1)
 
 // Leading spaces ensure starting at the right.
-//uint8_t banner_text[] = "  Arduino UNO R4 WiFi á í ó ô ç";
 uint8_t banner_text[32] = "\0";
 
 
