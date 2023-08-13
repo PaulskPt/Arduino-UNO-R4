@@ -40,7 +40,7 @@
 //uint8_t banner_text[] = "  Arduino UNO R4 WiFi á í ó ô ç";
 uint8_t banner_text[BANNER_LEN] = "  NTP Sync at: ";  // Was: "\0";
 int initial_banner_text_len = strlen((char*)banner_text);
-uint16_t tot_width = 0;
+uint8_t tot_width = 0;
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = SECRET_SSID;        // your network SSID (name)
