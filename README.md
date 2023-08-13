@@ -22,7 +22,11 @@ I am thinking about definining a character set with 5-column characters.
 - Added folder R4WiFi_RTC_NTPsync_to_led_matrix;
 - In this folder added:
   - the sketch: R4WiFi_RTC_NTPsync_to_led_matrix.ino;
-  - the file adafruit_secrets.h. You have to fill-in your WiFi credentials in this file.
+  - the file adafruit_secrets.h.
+
+You have to fill-in your WiFi credentials in this file.
+
+
 This example ia a try to display the date and time synchronized from an NTP server
 onto the led matrix. I made some changes to the definition of the led matrix
 characters '-' and ':'.
