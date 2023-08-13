@@ -9,10 +9,6 @@
  * 3. Open the Serial Monitor.
  * 
  * Initial author: Sebastian Romero @sebromero
- *
- * Modified by @PaulskPt (Github) on 2023-08-13
- * to display the sync'ed date and time onto the led matrix
- *
  */
 
 #include <Time.h>
@@ -35,6 +31,7 @@
 // #define my_debug  (1)
 
 // Leading spaces ensure starting at the right.
+//uint8_t banner_text[] = "  Arduino UNO R4 WiFi á í ó ô ç";
 uint8_t banner_text[32] = "\0";
 
 
@@ -473,6 +470,15 @@ void clr_banner_txt()
   }
 }
 
+void clr_led_matrix_bfr()
+{
+  // See definition above: uint8_t led_matrix_buffer[5*32];
+  for (int i=0; i < (5*32); i++)
+  {
+    led_matrix_buffer[i]  = 0;
+  }
+}
+
 void fill_banner_txt(uint8_t scroll, uint16_t ontime)
 {
   for (int i=0; i < 3; i++)
@@ -498,7 +504,8 @@ void pr_banner()
   //Serial.print("length (sizeof) banner_text= ");
   //Serial.println(len);
   Serial.print("length (strlen((char*)banner_text))= ");
-  Serial.println(len2);
+  Serial.print(len2);
+  Serial.println(" characters.");
 }
 
 void loop(){
@@ -516,6 +523,7 @@ void loop(){
     RTC.getTime(currentTime);
     Serial.println("------------------------------------------");
     Serial.println("The RTC datetime: " + String(currentTime));
+    clr_led_matrix_bfr();
     clr_banner_txt();
     fill_banner_txt(scroll, ontime); // fill the banner_text
     new_time = true; // set flag
