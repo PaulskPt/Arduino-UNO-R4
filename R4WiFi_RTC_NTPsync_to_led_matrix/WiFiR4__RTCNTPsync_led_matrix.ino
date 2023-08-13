@@ -11,7 +11,7 @@
  * Initial author: Sebastian Romero @sebromero
  * 
  * Modifications by @PaulskPt (Github)
- * Mods to display the received NTP datetime stamp to the 8x12 led matrix
+ * Mods to display the received NTP datetime stamp do the 8x12 led matrix
  * The interval for NTP sync is defined by I_TM.
  */
 
@@ -39,7 +39,7 @@
 // Leading spaces ensure starting at the right.
 //uint8_t banner_text[] = "  Arduino UNO R4 WiFi á í ó ô ç";
 uint8_t banner_text[BANNER_LEN] = "  NTP Sync at: ";  // Was: "\0";
-
+int initial_banner_text_len = strlen((char*)banner_text);
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = SECRET_SSID;        // your network SSID (name)
@@ -465,7 +465,7 @@ void setup(void)
 
 void clr_banner_txt()
 {
-  for (int i=16; i < BANNER_LEN; i++)  // Clear from after "  NTP Sync at: "
+  for (int i=initial_banner_text_len; i < BANNER_LEN; i++)  // Clear from after "  NTP Sync at: "
   {
     banner_text[i] = '\0';
   }
@@ -482,15 +482,10 @@ void clr_led_matrix_bfr()
 
 void fill_banner_txt(uint8_t scroll, uint16_t ontime)
 {
-  int len2 = strlen((char*)banner_text);
-  // Serial.print("fill_banner_txt(): len2= ");
-  // Serial.println(len2);
-
-  //uint8_t banner_text[BANNER_LEN] = "  NTP Sync at: ";
   for (int i=0; i < sizeof(currentTime); i++)
   {
     //if ( String(currentTime)[i] == '\0') break;
-    banner_text[len2+i] = String(currentTime)[i];
+    banner_text[initial_banner_text_len + i] = String(currentTime)[i];
   }
   // Load text message.
   led_matrix_puts(led_matrix_buffer,sizeof(led_matrix_buffer),banner_text);
@@ -499,11 +494,12 @@ void fill_banner_txt(uint8_t scroll, uint16_t ontime)
 void pr_banner()
 {
   int len2 = strlen((char*)banner_text);
-  Serial.print("banner_text = ");
-  Serial.println(String((char*)banner_text));
-  Serial.print("length banner_text= \"");
+  Serial.print("banner_text = \"");
+  Serial.print(String((char*)banner_text));
+  Serial.println("\"");
+  Serial.print("length banner_text= ");
   Serial.print(len2);
-  Serial.println("\" characters.");
+  Serial.println(" characters.");
 }
 
 unsigned long s_time = millis(); // start time
