@@ -531,7 +531,7 @@ void loop(){
     s_time = c_time;
     // Retrieve the date and time from the RTC and print them
     RTC.getTime(currentTime);
-    Serial.println("------------------------------------------");
+    Serial.println("-------------------------------------------------");
     Serial.println("The RTC datetime: " + String(currentTime));
     clr_led_matrix_bfr();
     clr_banner_txt();
