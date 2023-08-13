@@ -30,9 +30,11 @@
 #endif
 // #define my_debug  (1)
 
+#define BANNER_LEN 50
+
 // Leading spaces ensure starting at the right.
 //uint8_t banner_text[] = "  Arduino UNO R4 WiFi á í ó ô ç";
-uint8_t banner_text[32] = "\0";
+uint8_t banner_text[BANNER_LEN] = "  NTP Sync at: ";  // Was: "\0";
 
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
@@ -294,9 +296,9 @@ const uint8_t led_matrix_pins[led_matrix_rows][led_matrix_cols] =
 };
 
 // Every byte represents a column of the LED matrix.
-// Can hold 32 5x8-font characters.
+// Can hold BANNER_LEN (was: 32) 5x8-font characters.
 // Buffer can be smaller at the price of more code.
-uint8_t led_matrix_buffer[5*32];
+uint8_t led_matrix_buffer[5*BANNER_LEN];
 
 // Activate the pixel at (x,y) for ontime microseconds.
 void put_pixel(uint8_t x, uint8_t y, uint32_t ontime)
@@ -457,14 +459,9 @@ void setup(void)
   pr_banner();
 }
 
-unsigned long s_time = millis();
-unsigned long c_time = 0;
-unsigned long diftime = 0;
-
-
 void clr_banner_txt()
 {
-  for (int i=0; i < 32; i++)
+  for (int i=16; i < BANNER_LEN; i++)  // Clear from after "  NTP Sync at: "
   {
     banner_text[i] = '\0';
   }
@@ -473,7 +470,7 @@ void clr_banner_txt()
 void clr_led_matrix_bfr()
 {
   // See definition above: uint8_t led_matrix_buffer[5*32];
-  for (int i=0; i < (5*32); i++)
+  for (int i=0; i < (5*BANNER_LEN); i++)
   {
     led_matrix_buffer[i]  = 0;
   }
@@ -481,32 +478,34 @@ void clr_led_matrix_bfr()
 
 void fill_banner_txt(uint8_t scroll, uint16_t ontime)
 {
-  for (int i=0; i < 3; i++)
-  {
-    banner_text[i] = ' ';  // Fill two spaces
-  }
-  for (int i=0; i < sizeof(currentTime); i++)
-    {
-      //if ( String(currentTime)[i] == '\0') break;
-      banner_text[i+2] = String(currentTime)[i];
-    }
-    // Load text message.
-    led_matrix_puts(led_matrix_buffer,sizeof(led_matrix_buffer),banner_text);
+  int len2 = strlen((char*)banner_text);
+  // Serial.print("fill_banner_txt(): len2= ");
+  // Serial.println(len2);
 
+  //uint8_t banner_text[BANNER_LEN] = "  NTP Sync at: ";
+  for (int i=0; i < sizeof(currentTime); i++)
+  {
+    //if ( String(currentTime)[i] == '\0') break;
+    banner_text[len2+i] = String(currentTime)[i];
+  }
+  // Load text message.
+  led_matrix_puts(led_matrix_buffer,sizeof(led_matrix_buffer),banner_text);
 }
 
 void pr_banner()
-{     
-  //int len = sizeof(banner_text)/sizeof(banner_text[0]);
+{
   int len2 = strlen((char*)banner_text);
   Serial.print("banner_text = ");
   Serial.println(String((char*)banner_text));
-  //Serial.print("length (sizeof) banner_text= ");
-  //Serial.println(len);
-  Serial.print("length (strlen((char*)banner_text))= ");
+  Serial.print("length banner_text= \"");
   Serial.print(len2);
-  Serial.println(" characters.");
+  Serial.println("\" characters.");
 }
+
+unsigned long s_time = millis(); // start time
+unsigned long c_time = 0;  // current time
+unsigned long d_time = 0;  // difference time
+#define I_TM  300000  // interval time, about 5 minutes
 
 void loop(){
   // Scroll speed is determined by both scroll_speed and ontime.
@@ -516,9 +515,20 @@ void loop(){
 
   bool new_time = false;
   c_time = millis();
-  diftime = c_time - s_time;
-  if (diftime % 30000 == 0)  // Eveery 2 minutes
+  d_time = c_time - s_time; 
+  /*
+  Serial.print("loop(): I_TM= ");
+  Serial.print(I_TM);
+  Serial.print(", d_time= ");
+  Serial.print(d_time);
+  Serial.print(", c_time= ");
+  Serial.print(c_time);
+  Serial.print(", s_time= ");
+  Serial.println(s_time);
+  */
+  if ((d_time  >= I_TM) && (scroll == 0)) // Eveery 5 minutes and only if the current text has been scrolled
   {
+    s_time = c_time;
     // Retrieve the date and time from the RTC and print them
     RTC.getTime(currentTime);
     Serial.println("------------------------------------------");
@@ -537,8 +547,6 @@ void loop(){
       //banner_text[i] = c; // String(currentTime)[i];  // Was: = (char)c;
     }
     Serial.println();
-
-    s_time = c_time;
 
     if (new_time)
     {
