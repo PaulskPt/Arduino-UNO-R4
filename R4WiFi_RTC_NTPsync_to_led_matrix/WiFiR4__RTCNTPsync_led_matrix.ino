@@ -40,6 +40,7 @@
 //uint8_t banner_text[] = "  Arduino UNO R4 WiFi á í ó ô ç";
 uint8_t banner_text[BANNER_LEN] = "  NTP Sync at: ";  // Was: "\0";
 int initial_banner_text_len = strlen((char*)banner_text);
+uint16_t tot_width = 0;
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = SECRET_SSID;        // your network SSID (name)
@@ -400,6 +401,7 @@ uint8_t led_matrix_putch(uint8_t *p_buffer, uint16_t buffer_size, uint8_t ch)
   Serial.println(offset);
   #endif
   uint8_t width = font_5x8[offset];
+  tot_width += width; // calculate to total width of characters displayed
   for (i=0; i<width; i++) 
   { 
     offset += 1;
@@ -428,6 +430,10 @@ void setup(void)
 {
   Serial.begin(9600);
   while (!Serial);
+  
+  //define LED_BUILTIN as an output
+  pinMode(LED_BUILTIN, OUTPUT);
+  
   // Initialize LED matrix pins.
   for (uint8_t i=0; i<led_matrix_pin_count; i++)
   {
@@ -478,6 +484,7 @@ void clr_led_matrix_bfr()
   {
     led_matrix_buffer[i]  = 0;
   }
+  tot_width = 0;
 }
 
 void fill_banner_txt(uint8_t scroll, uint16_t ontime)
@@ -500,6 +507,24 @@ void pr_banner()
   Serial.print("length banner_text= ");
   Serial.print(len2);
   Serial.println(" characters.");
+}
+
+bool led_is_on = false;
+
+#define led_sw_cnt 150  // Defines limit of time count led stays on
+
+void led_on() {
+  //blinks the built-in LED every second
+  digitalWrite(LED_BUILTIN, HIGH);
+  led_is_on = true;
+  //delay(1000);
+}
+
+void led_off()
+{
+  digitalWrite(LED_BUILTIN, LOW);
+  led_is_on = false;
+  //delay(1000);
 }
 
 unsigned long s_time = millis(); // start time
@@ -555,6 +580,9 @@ void loop(){
     }
   }
 
+  if ((scroll > 0 && scroll < led_sw_cnt) && (led_is_on == false))
+    led_on();
+  
   // Refresh display
   led_matrix_buffer_show(scroll,ontime);
 
@@ -563,6 +591,18 @@ void loop(){
   {
     t_prev = millis();
     scroll += 1; // Scroll to the left.
-    if (scroll>5*strlen((char*)banner_text)) scroll = 0; // restart
+    if ((scroll >= led_sw_cnt) && (led_is_on == true))
+      led_off();
+    if (scroll>5*strlen((char*)banner_text))
+    {
+      /*
+      Serial.print("scroll= ");
+      Serial.println(scroll);
+      Serial.print("tot_width= ");
+      Serial.println(tot_width);
+      */
+      scroll = 0; // restart
+    }
   }
+
 }
