@@ -451,8 +451,6 @@ void fill_banner_txt(uint8_t scroll, uint16_t ontime)
 
   clr_banner_txt();
 
-  //init_banner_txt_len = strlen((char*)banner_txt);
-
   for (uint8_t i=0; i < sizeof(currentTime); i++)
   {
     banner_txt[init_banner_txt_len + i] = String(currentTime)[i];
