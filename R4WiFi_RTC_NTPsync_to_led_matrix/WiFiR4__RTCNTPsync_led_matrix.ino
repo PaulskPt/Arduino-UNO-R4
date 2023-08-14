@@ -484,7 +484,6 @@ void clr_led_matrix_bfr()
   {
     led_matrix_buffer[i]  = 0;
   }
-  tot_width = 0;
 }
 
 void fill_banner_txt(uint8_t scroll, uint16_t ontime)
@@ -494,6 +493,7 @@ void fill_banner_txt(uint8_t scroll, uint16_t ontime)
     //if ( String(currentTime)[i] == '\0') break;
     banner_text[initial_banner_text_len + i] = String(currentTime)[i];
   }
+  tot_width = 52; // corrective bias
   // Load text message.
   led_matrix_puts(led_matrix_buffer,sizeof(led_matrix_buffer),banner_text);
 }
@@ -530,7 +530,7 @@ void led_off()
 unsigned long s_time = millis(); // start time
 unsigned long c_time = 0;  // current time
 unsigned long d_time = 0;  // difference time
-#define I_TM  300000  // interval time, about 5 minutes
+#define I_TM  150000 // 300000  // interval time, about 5 minutes
 
 void loop(){
   // Scroll speed is determined by both scroll_speed and ontime.
