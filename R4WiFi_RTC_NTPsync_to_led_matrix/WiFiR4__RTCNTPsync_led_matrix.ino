@@ -12,13 +12,16 @@
  * 
  * Modifications by @PaulskPt (Github)
  * Mods to display the received NTP datetime stamp do the 8x12 led matrix
- * The interval for NTP sync is defined by I_TM.
+ * The interval for NTP sync is defined by I_NTP_SYNC.
+ * The RTC datetime readout interval is defined by I_TM
+ * It takes about 19 seconds for the RTC datetime string to be displayed
  */
 
 #include <Time.h>
 #include <TimeLib.h>
 #include "RTC.h"
 #include <NTPClient.h>
+#include <string.h>
 
 //#if defined(ARDUINO_PORTENTA_C33)
 //#include <WiFiC3.h>
@@ -37,9 +40,8 @@
 #define BANNER_LEN 50
 
 // Leading spaces ensure starting at the right.
-//uint8_t banner_text[] = "  Arduino UNO R4 WiFi á í ó ô ç";
-uint8_t banner_text[BANNER_LEN] = "  NTP Sync at: ";  // Was: "\0";
-int initial_banner_text_len = strlen((char*)banner_text);
+uint8_t banner_txt[BANNER_LEN]  = "  RTC datetime: ";  
+uint8_t init_banner_txt_len = strlen((char*)banner_txt);
 uint8_t tot_width = 0;
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
@@ -426,61 +428,19 @@ uint16_t led_matrix_puts(uint8_t *p_buffer, uint16_t buffer_size, uint8_t *p_str
 
 uint32_t t_prev = 0;
 
-void setup(void)
-{
-  Serial.begin(9600);
-  while (!Serial);
-  
-  //define LED_BUILTIN as an output
-  pinMode(LED_BUILTIN, OUTPUT);
-  
-  // Initialize LED matrix pins.
-  for (uint8_t i=0; i<led_matrix_pin_count; i++)
-  {
-    pinMode(led_matrix_pin_first+i,INPUT); // all off
-  }
-  // Load text message.
-  led_matrix_puts(led_matrix_buffer,sizeof(led_matrix_buffer),banner_text);
-  // Ready...
-  t_prev = millis();
-  // Go!
-
-  connectToWiFi();
-  Serial.println("\nStarting connection to server...");
-  Udp.begin(LOCAL_PORT);
-  RTC.begin();
-
-  // Get the current date and time from an NTP server and convert
-  // it to UTC +2 by passing the time zone offset in hours.
-  // You may change the time zone offset to your local one.
-  auto unixTime = getUnixTime(1);
-  Serial.print("Unix time = ");
-  Serial.println(unixTime);
-  RTCTime timeToSet = RTCTime(unixTime);
-  RTC.setTime(timeToSet);
-
-  // Retrieve the date and time from the RTC and print them
- 
-  RTC.getTime(currentTime); 
-  Serial.println("The RTC was just set to: " + String(currentTime));
-  fill_banner_txt(0, 521); // 
-  // Refresh display.
-  led_matrix_buffer_show(0, 521);
-  pr_banner();
-}
-
 void clr_banner_txt()
 {
-  for (int i=initial_banner_text_len; i < BANNER_LEN; i++)  // Clear from after "  NTP Sync at: "
+
+  for (uint8_t i = init_banner_txt_len; i < BANNER_LEN; i++)  // Clear from after "  NTP Sync at: "
   {
-    banner_text[i] = '\0';
+    banner_txt[i] = '\0';
   }
 }
 
 void clr_led_matrix_bfr()
 {
   // See definition above: uint8_t led_matrix_buffer[5*32];
-  for (int i=0; i < (5*BANNER_LEN); i++)
+  for (uint8_t i=0; i < (5*BANNER_LEN); i++)
   {
     led_matrix_buffer[i]  = 0;
   }
@@ -488,23 +448,30 @@ void clr_led_matrix_bfr()
 
 void fill_banner_txt(uint8_t scroll, uint16_t ontime)
 {
-  for (int i=0; i < sizeof(currentTime); i++)
+
+  clr_banner_txt();
+
+  //init_banner_txt_len = strlen((char*)banner_txt);
+
+  for (uint8_t i=0; i < sizeof(currentTime); i++)
   {
-    //if ( String(currentTime)[i] == '\0') break;
-    banner_text[initial_banner_text_len + i] = String(currentTime)[i];
+    banner_txt[init_banner_txt_len + i] = String(currentTime)[i];
   }
+  Serial.print("fill_banner_txt(): filled banner_txt: \"");
+  Serial.print(String((char*)banner_txt));
+  Serial.println("\"");
   tot_width = 52; // corrective bias
   // Load text message.
-  led_matrix_puts(led_matrix_buffer,sizeof(led_matrix_buffer),banner_text);
+  led_matrix_puts(led_matrix_buffer,sizeof(led_matrix_buffer),banner_txt);
 }
 
 void pr_banner()
 {
-  int len2 = strlen((char*)banner_text);
-  Serial.print("banner_text = \"");
-  Serial.print(String((char*)banner_text));
+  int len2 = strlen((char*)banner_txt);
+  Serial.print("banner_txt = \"");
+  Serial.print(String((char*)banner_txt));
   Serial.println("\"");
-  Serial.print("length banner_text= ");
+  Serial.print("length banner_txt= ");
   Serial.print(len2);
   Serial.println(" characters.");
 }
@@ -527,20 +494,105 @@ void led_off()
   //delay(1000);
 }
 
+void sync_ntp()
+{
+  // Get the current date and time from an NTP server and convert
+  // it to UTC +2 by passing the time zone offset in hours.
+  // You may change the time zone offset to your local one.
+  auto unixTime = getUnixTime(1);  // Set for utc+1 (Portugal etc.)
+  Serial.print("sync_ntp(): Unix time = ");
+  Serial.println(unixTime);
+  RTCTime timeToSet = RTCTime(unixTime);
+  RTC.setTime(timeToSet);
+}
+
+const uint16_t scroll_speed = 100; // milliseconds
+const uint16_t ontime = 521; // microseconds. 521 (us) * 96 (pixels) = 50 ms frame rate if all the pixels are on.
+static uint8_t scroll = 0; // scroll position.
+
+void setup(void)
+{
+  Serial.begin(9600);
+  while (!Serial);
+  
+  //define LED_BUILTIN as an output
+  pinMode(LED_BUILTIN, OUTPUT);
+  
+  // Initialize LED matrix pins.
+  for (uint8_t i=0; i<led_matrix_pin_count; i++)
+  {
+    pinMode(led_matrix_pin_first+i,INPUT); // all off
+  }
+
+  // Ready...
+  t_prev = millis();
+  // Go!
+
+  connectToWiFi();
+  Serial.println("\nStarting connection to server...");
+  Udp.begin(LOCAL_PORT);
+  RTC.begin();
+
+  sync_ntp();  // Get NTP datetime stamp and update internal RTC
+
+  // Retrieve the date and time from the RTC and print them
+ 
+  RTC.getTime(currentTime); 
+  Serial.println("The RTC was just set to: " + String(currentTime));
+
+  fill_banner_txt(scroll, ontime); // clears & fills the banner_txt
+  // Refresh display.
+  led_matrix_buffer_show(scroll, ontime);
+  pr_banner();
+
+  scroll = 0;
+
+  while (true)
+  {
+    if ((scroll > 0 && scroll < (tot_width-led_sw_cnt)) && (led_is_on == false))
+      led_on();
+    // Refresh display
+    led_matrix_buffer_show(scroll,ontime);
+
+    // Update scroll position.
+    if (millis()>=t_prev+scroll_speed)
+    {
+      t_prev = millis();
+      scroll += 1; // Scroll to the left.
+      
+      if ((scroll >= (tot_width-led_sw_cnt)) && (led_is_on == true))
+        led_off();
+      uint8_t s_len = strlen((char*)banner_txt);
+      if (scroll>5*s_len)
+      {
+        scroll = 0;
+        break;
+      }
+    }
+  }
+}
+
 unsigned long s_time = millis(); // start time
+unsigned long sntp_time = s_time; // start time (for ntp sync)
 unsigned long c_time = 0;  // current time
 unsigned long d_time = 0;  // difference time
-#define I_TM  150000 // 300000  // interval time, about 5 minutes
+unsigned long n_time = 0;  // ntp sync time
+#define I_NTP_SYNC 900000 // interval time NTP sync about 15 minutes
+#define I_TM  60000 // 300000  // interval time, about 1 minute
+bool lStart = true;
 
 void loop(){
   // Scroll speed is determined by both scroll_speed and ontime.
+  /*
   const uint16_t scroll_speed = 100; // milliseconds
   const uint16_t ontime = 521; // microseconds. 521 (us) * 96 (pixels) = 50 ms frame rate if all the pixels are on.
   static uint8_t scroll = 0; // scroll position.
-
+  */
   bool new_time = false;
   c_time = millis();
   d_time = c_time - s_time; 
+  n_time = c_time - sntp_time;
+
   /*
   Serial.print("loop(): I_TM= ");
   Serial.print(I_TM);
@@ -551,31 +603,36 @@ void loop(){
   Serial.print(", s_time= ");
   Serial.println(s_time);
   */
-  if ((d_time  >= I_TM) && (scroll == 0)) // Eveery 5 minutes and only if the current text has been scrolled
+  if ((n_time  >= I_NTP_SYNC) && (scroll == 0))
   {
+    sntp_time = c_time;  // update 
+    sync_ntp();  // Get NTP datetime stamp and update internal RTC
+  }    
+  if ( (lStart) || ( (d_time  >= I_TM) && (scroll == 0) ) ) // Every 5 minutes and only if the current text has been scrolled
+  {
+    if (lStart) lStart = false;
     s_time = c_time;
     // Retrieve the date and time from the RTC and print them
     RTC.getTime(currentTime);
     Serial.println("--------------------------------------------------");
     Serial.println("The RTC datetime: " + String(currentTime));
     clr_led_matrix_bfr();
-    clr_banner_txt();
-    fill_banner_txt(scroll, ontime); // fill the banner_text
+    // Load text message.
+    fill_banner_txt(scroll, ontime); // clears & fills the banner_txt
     new_time = true; // set flag
 
     Serial.print("String(currentTime)= ");
-    for (int i=0; i < sizeof(currentTime); i++)
+    for (uint8_t i=0; i < sizeof(currentTime); i++)
     {
       char c = String(currentTime)[i];
       if (c == 0) break;
       Serial.print(c);
-      //banner_text[i] = c; // String(currentTime)[i];  // Was: = (char)c;
     }
     Serial.println();
 
     if (new_time)
     {
-      pr_banner();
+      pr_banner();  // print banner_txt
       new_time = false;
     }
   }
@@ -593,8 +650,7 @@ void loop(){
     scroll += 1; // Scroll to the left.
     if ((scroll >= (tot_width-led_sw_cnt)) && (led_is_on == true))
       led_off();
-    if (scroll>5*strlen((char*)banner_text))
+    if (scroll>5*strlen((char*)banner_txt))
       scroll = 0; // restart
   }
-
 }
