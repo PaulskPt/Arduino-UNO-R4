@@ -42,7 +42,7 @@
 #define BANNER2 1
 
 // Leading spaces ensure starting at the right.
-uint8_t ntp_sync_txt[BANNER_LEN]  = "  NTP synced:   ";
+uint8_t ntp_sync_txt[BANNER_LEN]  = "  NTP synctime: ";
 uint8_t rtc_dt_txt[BANNER_LEN]    = "  RTC datetime: ";
 uint8_t banner_txt[BANNER_LEN]    = "";  
 uint8_t init_banner_txt_len = strlen((char*)rtc_dt_txt);
@@ -624,8 +624,10 @@ void loop(){
   if ((n_time  >= I_NTP_SYNC) && (scroll == 0))
   {
     sntp_time = c_time;  // update 
-    sync_ntp();  // Get NTP datetime stamp and update internal RTC
-  }    
+    sync_ntp();  // Get NTP datetime stamp and update internal RTC  }
+    if (txt_shown != BANNER1)
+      swap_banner(BANNER1);
+  }
   if ( (lStart) || ( (d_time  >= I_TM) && (scroll == 0) ) ) // Every 5 minutes and only if the current text has been scrolled
   {
     if (lStart) lStart = false;
