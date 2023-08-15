@@ -475,9 +475,11 @@ void fill_banner_txt(uint8_t scroll, uint16_t ontime)
   {
     banner_txt[init_banner_txt_len + i] = String(currentTime)[i];
   }
-  Serial.print("fill_banner_txt(): filled banner_txt: \"");
-  Serial.print(String((char*)banner_txt));
-  Serial.println("\"");
+  #ifdef my_debug
+    Serial.print("fill_banner_txt(): filled banner_txt: \"");
+    Serial.print(String((char*)banner_txt));
+    Serial.println("\"");
+  #endif
   tot_width = 52; // corrective bias
   // Load text message.
   led_matrix_puts(led_matrix_buffer,sizeof(led_matrix_buffer),banner_txt);
@@ -596,7 +598,7 @@ unsigned long c_time = 0;  // current time
 unsigned long d_time = 0;  // difference time
 unsigned long n_time = 0;  // ntp sync time
 #define I_NTP_SYNC 900000 // interval time NTP sync about 15 minutes
-#define I_TM  60000 // 300000  // interval time, about 1 minute
+#define I_TM  60000 // 300000  // interval time, about 1 minute (+ text scroll time (usually 16 secs))
 bool lStart = true;
 
 void loop(){
@@ -626,7 +628,14 @@ void loop(){
     sntp_time = c_time;  // update 
     sync_ntp();  // Get NTP datetime stamp and update internal RTC  }
     if (txt_shown != BANNER1)
+    {
+      clr_led_matrix_bfr();
       swap_banner(BANNER1);
+      fill_banner_txt(scroll, ontime); // clears & fills the banner_txt
+      led_matrix_buffer_show(scroll, ontime);
+      pr_banner();
+    }
+
   }
   if ( (lStart) || ( (d_time  >= I_TM) && (scroll == 0) ) ) // Every 5 minutes and only if the current text has been scrolled
   {
