@@ -44,7 +44,7 @@ float aht20_rcvd_humidity = 0.0;
 #undef my_debug
 #endif
 
-#define BANNER_LEN 20
+#define BANNER_LEN 21
 #define BANNER1 0
 #define BANNER2 1
 
@@ -328,7 +328,7 @@ void clr_banner_txt()
 
 void clr_led_matrix_bfr()
 {
-  // See definition above: uint8_t led_matrix_buffer[5*32];
+  // See definition above: uint8_t led_matrix_buffer[5*BANNER_LEN];
   for (uint8_t i=0; i < (5*BANNER_LEN); i++)
   {
     led_matrix_buffer[i]  = 0;
