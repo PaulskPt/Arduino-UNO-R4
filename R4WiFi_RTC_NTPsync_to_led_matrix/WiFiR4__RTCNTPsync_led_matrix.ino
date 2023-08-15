@@ -38,11 +38,16 @@
 // #define my_debug  (1)
 
 #define BANNER_LEN 50
+#define BANNER1 0
+#define BANNER2 1
 
 // Leading spaces ensure starting at the right.
-uint8_t banner_txt[BANNER_LEN]  = "  RTC datetime: ";  
-uint8_t init_banner_txt_len = strlen((char*)banner_txt);
+uint8_t ntp_sync_txt[BANNER_LEN]  = "  NTP synced:   ";
+uint8_t rtc_dt_txt[BANNER_LEN]    = "  RTC datetime: ";
+uint8_t banner_txt[BANNER_LEN]    = "";  
+uint8_t init_banner_txt_len = strlen((char*)rtc_dt_txt);
 uint8_t tot_width = 0;
+uint8_t txt_shown = BANNER1;
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = SECRET_SSID;        // your network SSID (name)
@@ -446,10 +451,25 @@ void clr_led_matrix_bfr()
   }
 }
 
+void swap_banner(uint8_t b_cnt)
+{
+  if (b_cnt > BANNER2)
+    b_cnt = BANNER2;
+
+    txt_shown = b_cnt; // update global var
+
+  for(uint8_t i=0; i < init_banner_txt_len; i++)
+  {
+    banner_txt[i] =  (b_cnt == BANNER1)  ? ntp_sync_txt[i] : rtc_dt_txt[i];
+  }
+}
+
 void fill_banner_txt(uint8_t scroll, uint16_t ontime)
 {
 
   clr_banner_txt();
+
+  //init_banner_txt_len = strlen((char*)banner_txt);
 
   for (uint8_t i=0; i < sizeof(currentTime); i++)
   {
@@ -537,7 +557,7 @@ void setup(void)
  
   RTC.getTime(currentTime); 
   Serial.println("The RTC was just set to: " + String(currentTime));
-
+  swap_banner(BANNER1);
   fill_banner_txt(scroll, ontime); // clears & fills the banner_txt
   // Refresh display.
   led_matrix_buffer_show(scroll, ontime);
@@ -616,6 +636,8 @@ void loop(){
     Serial.println("The RTC datetime: " + String(currentTime));
     clr_led_matrix_bfr();
     // Load text message.
+    if (txt_shown != BANNER2)
+      swap_banner(BANNER2);
     fill_banner_txt(scroll, ontime); // clears & fills the banner_txt
     new_time = true; // set flag
 
