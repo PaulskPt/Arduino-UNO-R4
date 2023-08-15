@@ -26,9 +26,16 @@ I am thinking about definining a character set with 5-column characters.
 
 You have to fill-in your WiFi credentials in this file.
 
-
 This example ia a try to display the date and time synchronized from an NTP server
 onto the led matrix. I made some changes to the definition of the led matrix
 characters '-' and ':'.
+
+
+- Added folder R5WiFi_AHT20_to_led_matrix.
+- In this folder added:
+  - the sketch: R4WiFi_AHT20_to_led_matrix.ino.
+
+This example reads the temperature and humidity values from an Adafruit AHT20 sensor
+and displays the values to the led matrix.
 
 
