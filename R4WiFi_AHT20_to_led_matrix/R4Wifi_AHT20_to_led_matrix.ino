@@ -49,8 +49,8 @@ float aht20_rcvd_humidity = 0.0;
 #define BANNER2 1
 
 // Leading spaces ensure starting at the right.
-uint8_t temp_txt[BANNER_LEN]  = "  Temp(deg C):";
-uint8_t humi_txt[BANNER_LEN]  = "  Hum(deg rH):";
+uint8_t temp_txt[BANNER_LEN]  = "  Temp(deg C): ";
+uint8_t humi_txt[BANNER_LEN]  = "  Hum(deg rH): ";
 uint8_t banner_txt[BANNER_LEN] = "";  
 uint8_t init_banner_txt_len = strlen((char*)temp_txt);
 
@@ -403,11 +403,11 @@ void setup(void)
   Serial.begin(115200);
   while (!Serial)
     delay(10); // will pause Zero, Leonardo, etc until serial console opens
-  Serial.println("Arduino UNO R4 WiFi with Adafruit AHT10/AHT20 test!");
+  Serial.println("Arduino UNO R4 WiFi with Adafruit AHT20 test!");
 
   Wire1.begin();               // line added by @PaulskPt
   if (!aht.begin(&Wire1)) {    // "&Wire1" added by @PaulskPt
-    Serial.println("Failed to find AHT10/AHT20 chip");
+    Serial.println("Failed to find AHT20 chip");
     while (1) {
       delay(10);
     }
