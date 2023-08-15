@@ -44,7 +44,7 @@ float aht20_rcvd_humidity = 0.0;
 #undef my_debug
 #endif
 
-#define BANNER_LEN 32
+#define BANNER_LEN 20
 #define BANNER1 0
 #define BANNER2 1
 
@@ -197,7 +197,8 @@ const uint8_t led_matrix_pins[led_matrix_rows][led_matrix_cols] =
 // Every byte represents a column of the LED matrix.
 // Can hold 32 5x8-font characters.
 // Buffer can be smaller at the price of more code.
-uint8_t led_matrix_buffer[5*32];
+//uint8_t led_matrix_buffer[5 * sizeof(banner_text)]; // Suggestion by @UKHeliBob
+uint8_t led_matrix_buffer[5*BANNER_LEN];
 
 // Activate the pixel at (x,y) for ontime microseconds.
 void put_pixel(uint8_t x, uint8_t y, uint32_t ontime)
