@@ -15,6 +15,7 @@
  * The interval for NTP sync is defined by I_NTP_SYNC.
  * The RTC datetime readout interval is defined by I_TM
  * It takes about 19 seconds for the RTC datetime string to be displayed
+ * Define your timezone offset in line 41 below: "#define TZ_OFFSET"
  */
 
 #include <Time.h>
@@ -37,6 +38,7 @@
 #endif
 // #define my_debug  (1)
 
+#define TZ_OFFSET -4  // 1 For Portugal; -4 for NY, USA etc...
 #define BANNER_LEN 50
 #define BANNER1 0
 #define BANNER2 1
@@ -519,7 +521,7 @@ void sync_ntp()
   // Get the current date and time from an NTP server and convert
   // it to UTC +2 by passing the time zone offset in hours.
   // You may change the time zone offset to your local one.
-  auto unixTime = getUnixTime(1);  // Set for utc+1 (Portugal etc.)
+  auto unixTime = getUnixTime(TZ_OFFSET);  // Set for utc+1 (Portugal etc.)
   Serial.print("sync_ntp(): Unix time = ");
   Serial.println(unixTime);
   RTCTime timeToSet = RTCTime(unixTime);
