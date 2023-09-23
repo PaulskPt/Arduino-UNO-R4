@@ -521,7 +521,7 @@ void sync_ntp()
   // Get the current date and time from an NTP server and convert
   // it to UTC +2 by passing the time zone offset in hours.
   // You may change the time zone offset to your local one.
-  auto unixTime = getUnixTime(TZ_OFFSET);  // Set for utc+1 (Portugal etc.)
+  auto unixTime = getUnixTime(TZ_OFFSET);  // See TZ_OFFSET definition in line 41
   Serial.print("sync_ntp(): Unix time = ");
   Serial.println(unixTime);
   RTCTime timeToSet = RTCTime(unixTime);
