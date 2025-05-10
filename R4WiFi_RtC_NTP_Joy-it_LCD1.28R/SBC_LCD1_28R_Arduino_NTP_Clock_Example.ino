@@ -546,7 +546,7 @@ unsigned long sntp_time = s_time; // start time (for ntp sync)
 unsigned long c_time = 0;  // current time
 unsigned long d_time = 0;  // difference time
 unsigned long n_time = 0;  // ntp sync time
-#define I_NTP_SYNC 900000  // interval time NTP sync about 15 minutes
+#define I_NTP_SYNC 60000  // interval time NTP sync about 1 minute (because the Uno R4 RTC is very inaccurate!)
 #define I_TM  300000  // interval time, about 5 minutes
 bool lStart = true;
 bool lStart2 = true;
