@@ -52,5 +52,5 @@ instead of printing the datetime to the led matrix of the Uno R4, the datetime i
 an analog clock onto the Joy-it round LCD of 1.28inches.
 In file ```adafruit_secrets.h``` you have to enter your ```WiFi SSID```, ```PASSWORD``` and ```TIMEZONE_OFFSET```. The latter represents the value in hours, for example Europe/Lisbon will have a TIMEZONE_OFFSET = "1" (1 hour).
 - Added also a folder ```images``` with some images of this project version.
-- Added a folder ```docs```. In it a monitor output text files for this project version.
+- Added a folder ```docs```. In it a monitor output text file for this project version.
 
