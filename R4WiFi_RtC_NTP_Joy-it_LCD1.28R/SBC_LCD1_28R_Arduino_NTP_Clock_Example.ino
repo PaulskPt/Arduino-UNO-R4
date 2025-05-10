@@ -546,76 +546,91 @@ void setup(void) {
     ss = currentTime.getSeconds(); // + 6;
 }
 
-unsigned long s_time = millis();  // start time
-unsigned long sntp_time = s_time; // start time (for ntp sync)
-unsigned long c_time = 0;  // current time
-unsigned long d_time = 0;  // difference time
-unsigned long n_time = 0;  // ntp sync time
-#define I_NTP_SYNC 60000  // interval time NTP sync about 1 minute (because the Uno R4 RTC is very inaccurate!)
-#define I_TM  300000  // interval time, about 5 minutes
-bool lStart = true;
-bool lStart2 = true;
+
 
 void loop() {
-    if (lStart) {
-        Serial.print(F("RTC sync from NTP interval: "));
-        int ntp_interval = I_NTP_SYNC / 60000;
-        Serial.print(ntp_interval);
-        if (ntp_interval <= 1)
-            Serial.println(F(" minute"));
-        else
-            Serial.println(F(" minutes"));
-    }
-    c_time = millis();
-    d_time = c_time - s_time; 
-    n_time = c_time - sntp_time;
+    unsigned long s_time = millis();  // start time
+    unsigned long sntp_time = s_time; // start time (for ntp sync)
+    unsigned long c_time = 0;  // current time
+    unsigned long d_time = 0;  // difference time
+    unsigned long n_time = 0;  // ntp sync time
+    #define I_NTP_SYNC 60000  // interval time NTP sync about 1 minute (because the Uno R4 RTC is very inaccurate!)
+    #define I_TM  300000  // interval time, about 5 minutes
+    bool lStart = true;
+    bool lStart2 = true;
+    bool was_synced = false;
 
-    if (n_time  >= I_NTP_SYNC) { // every 15 minutes
-      sntp_time = c_time;  // update 
-      sync_ntp();  // Get NTP datetime stamp and update internal RTC  }
-    }
-    // Retrieve the date and time from the RTC
-    RTC.getTime(currentTime);
-    if ( (lStart) || (d_time  >= I_TM) )  // Every 1 minute
-    {
-        if (lStart) lStart = false;
-        s_time = c_time;
-        // Prrint the date and time from RTC
-        do_line();
-        Serial.print(F("The RTC datetime: "));
-        Serial.println(String(currentTime));
-        do_line();
-    }
-    unixTime2 = currentTime.getUnixTime(); // unixTime2 in seconds
-    hh = currentTime.getHour();
-    mm = currentTime.getMinutes(); // + 3;
-    ss = currentTime.getSeconds(); // + 6;
-    
-    // Pre-compute hand degrees, x & y coords for a fast screen update
-    sdeg = SIXTIETH_RADIAN * ((unixTime2 % 1) + ss); // 0-59 seconds
-    nsx = cos(sdeg - RIGHT_ANGLE_RADIAN) * sHandLen + center;
-    nsy = sin(sdeg - RIGHT_ANGLE_RADIAN) * sHandLen + center;
-    if ((nsx != osx) || (nsy != osy))
-    {
-        mdeg = (SIXTIETH * sdeg) + (SIXTIETH_RADIAN * mm); // 0-59 (includes seconds)
-        hdeg = (TWELFTH * mdeg) + (TWELFTH_RADIAN * hh);   // 0-11 (includes minutes)
-        mdeg -= RIGHT_ANGLE_RADIAN;
-        hdeg -= RIGHT_ANGLE_RADIAN;
-        nmx = cos(mdeg) * mHandLen + center;
-        nmy = sin(mdeg) * mHandLen + center;
-        nhx = cos(hdeg) * hHandLen + center;
-        nhy = sin(hdeg) * hHandLen + center;
+    while (true) {
+        if (lStart) {
+            Serial.print(F("RTC sync from NTP interval: "));
+            int ntp_interval = I_NTP_SYNC / 60000;
+            Serial.print(ntp_interval);
+            if (ntp_interval <= 1)
+                Serial.println(F(" minute"));
+            else
+                Serial.println(F(" minutes"));
+        }
+        c_time = millis();
+        d_time = c_time - s_time; 
+        n_time = c_time - sntp_time;
 
-        // redraw hands
-        redraw_hands_cached_draw_and_erase();
+        if (n_time  >= I_NTP_SYNC) { // every 15 minutes
+        sntp_time = c_time;  // update 
+        sync_ntp();  // Get NTP datetime stamp and update internal RTC  }
+        was_synced = true;
+        }
+        // Retrieve the date and time from the RTC
+        RTC.getTime(currentTime);
+        if ( (lStart) || (d_time  >= I_TM) )  // Every 1 minute
+        {
+            if (lStart) lStart = false;
+            s_time = c_time;
+            // Prrint the date and time from RTC
+            do_line();
+            Serial.print(F("The RTC datetime: "));
+            Serial.println(String(currentTime));
+            do_line();
+        }
 
-        ohx = nhx;
-        ohy = nhy;
-        omx = nmx;
-        omy = nmy;
-        osx = nsx;
-        osy = nsy;
+        if (was_synced)
+            unixTime2 = currentTime.getUnixTime() + 1; // Compensate 1 second for being busy getting NTP dt stamp
+        else 
+            unixTime2 = currentTime.getUnixTime();
+        
+        hh = currentTime.getHour();
+        mm = currentTime.getMinutes(); // + 3;
+        if (was_synced) {
+            ss = currentTime.getSeconds() + 1; // + 3;
+            was_synced = false;
+        } else
+            ss = currentTime.getSeconds(); // + 6;
+        
+        // Pre-compute hand degrees, x & y coords for a fast screen update
+        sdeg = SIXTIETH_RADIAN * ((unixTime2 % 1) + ss); // 0-59 seconds
+        nsx = cos(sdeg - RIGHT_ANGLE_RADIAN) * sHandLen + center;
+        nsy = sin(sdeg - RIGHT_ANGLE_RADIAN) * sHandLen + center;
+        if ((nsx != osx) || (nsy != osy))
+        {
+            mdeg = (SIXTIETH * sdeg) + (SIXTIETH_RADIAN * mm); // 0-59 (includes seconds)
+            hdeg = (TWELFTH * mdeg) + (TWELFTH_RADIAN * hh);   // 0-11 (includes minutes)
+            mdeg -= RIGHT_ANGLE_RADIAN;
+            hdeg -= RIGHT_ANGLE_RADIAN;
+            nmx = cos(mdeg) * mHandLen + center;
+            nmy = sin(mdeg) * mHandLen + center;
+            nhx = cos(hdeg) * hHandLen + center;
+            nhy = sin(hdeg) * hHandLen + center;
 
-        delay(1);
+            // redraw hands
+            redraw_hands_cached_draw_and_erase();
+
+            ohx = nhx;
+            ohy = nhy;
+            omx = nmx;
+            omy = nmy;
+            osx = nsx;
+            osy = nsy;
+
+            delay(1);
+        }
     }
 }

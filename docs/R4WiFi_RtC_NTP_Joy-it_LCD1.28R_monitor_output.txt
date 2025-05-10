@@ -69,3 +69,7 @@ After change of NTP sync interval to 1 minute:
 19:19:14.037 -> getUnixTime(): packet with unixtime received
 19:19:14.037 -> sync_ntp(): Unix time = 1746904753
 19:19:14.037 -> sync_ntp(): RTC set to: 2025-05-10T19:19:13
+
+
+
+
