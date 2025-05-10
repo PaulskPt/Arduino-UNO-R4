@@ -179,7 +179,7 @@ unsigned long getUnixTime(int8_t timeZoneOffsetHours = 0, uint8_t maxTries = 5){
     delay(1000);
 
     if (Udp.parsePacket()) {
-      Serial.println("packet with unixtime received");
+      Serial.println(F("\ngetUnixTime(): packet with unixtime received"));
       Udp.read(packetBuffer, NTP_PACKET_SIZE); // read the packet into the buffer
 
       //the timestamp starts at byte 40 of the received packet and is four bytes,
@@ -260,7 +260,6 @@ static uint16_t cached_points_idx = 0;
 static int16_t *last_cached_point;
 
 uint32_t t_prev = 0;
-
 
 void draw_round_clock_mark(int16_t innerR1, int16_t outerR1, int16_t innerR2, int16_t outerR2, int16_t innerR3, int16_t outerR3)
 {
@@ -475,6 +474,12 @@ void write_cache_pixel(int16_t x, int16_t y, int16_t color, bool cross_check_sec
     gfx->writePixel(x, y, color);
 }
 
+void do_line() {
+    for (uint8_t i=0; i<37; i++)
+            Serial.print("-");
+        Serial.println();
+}
+
 void setup(void) {
 
     Serial.begin(115200);
@@ -572,11 +577,10 @@ void loop() {
         if (lStart) lStart = false;
         s_time = c_time;
         // Prrint the date and time from RTC
-        for (uint8_t i=0; i<37; i++)
-            Serial.print("-");
-        Serial.println();
+        do_line();
         Serial.print(F("The RTC datetime: "));
         Serial.println(String(currentTime));
+        do_line();
     }
     unixTime2 = currentTime.getUnixTime(); // unixTime2 in seconds
     hh = currentTime.getHour();
