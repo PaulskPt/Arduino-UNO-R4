@@ -18,6 +18,7 @@ Serial monitor output:
 17:09:11.888 -> IP Address: 192.168.1.75
 17:09:11.888 -> signal strength (RSSI):-39 dBm
 17:09:11.888 -> 
+
 17:09:11.888 -> Starting connection to NTP server...
 17:09:11.924 -> Timezone offset in hours: 1
 17:09:12.925 -> packet with unixtime received
@@ -26,4 +27,18 @@ Serial monitor output:
 17:09:13.848 -> RTC sync from NTP interval: 15 minutes
 17:09:13.848 -> -------------------------------------
 17:09:13.848 -> The RTC datetime: 2025-05-10T17:09:13
-
+17:14:14.190 -> -------------------------------------
+17:14:14.190 -> The RTC datetime: 2025-05-10T17:14:19
+17:19:14.604 -> -------------------------------------
+17:19:14.604 -> The RTC datetime: 2025-05-10T17:19:24
+17:24:03.977 -> packet with unixtime received
+17:24:03.977 -> sync_ntp(): Unix time = 1746897843
+17:24:03.977 -> sync_ntp(): RTC set to: 2025-05-10T17:24:03
+17:24:14.985 -> -------------------------------------
+17:24:14.985 -> The RTC datetime: 2025-05-10T17:24:14
+17:29:15.412 -> -------------------------------------
+17:29:15.412 -> The RTC datetime: 2025-05-10T17:29:20
+17:34:15.791 -> -------------------------------------
+17:34:15.791 -> The RTC datetime: 2025-05-10T17:34:26
+17:39:05.124 -> packet with unixtime received
+17:39:05.169 -> sync_ntp(): Unix time = 1746898744
