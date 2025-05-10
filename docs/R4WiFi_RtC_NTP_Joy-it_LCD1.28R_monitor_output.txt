@@ -1,0 +1,29 @@
+
+2025-05-10 17h09 utc +1
+
+Board: Arduino Uno R4 WiFi with connected a Joy-it SBC LCD 1.28R 
+
+IDE: Arduino v2.3.5
+
+Serial monitor output:
+
+17:09:01.759 -> 
+17:09:01.759 -> Arduino Uno R4 WiFi com Joy-it SBC LCD 1.28R display clock test
+17:09:01.806 -> 
+17:09:01.806 -> WiFi firmware version installed: 0.5.2
+17:09:01.806 -> firmware latest version: 0.5.2
+17:09:01.806 -> Attempting to connect to SSID: Vodafone-8D96F1
+17:09:11.888 -> Connected to WiFi
+17:09:11.888 -> SSID: Vodafone-8D96F1
+17:09:11.888 -> IP Address: 192.168.1.75
+17:09:11.888 -> signal strength (RSSI):-39 dBm
+17:09:11.888 -> 
+17:09:11.888 -> Starting connection to NTP server...
+17:09:11.924 -> Timezone offset in hours: 1
+17:09:12.925 -> packet with unixtime received
+17:09:12.964 -> sync_ntp(): Unix time = 1746896952
+17:09:12.964 -> sync_ntp(): RTC set to: 2025-05-10T17:09:12
+17:09:13.848 -> RTC sync from NTP interval: 15 minutes
+17:09:13.848 -> -------------------------------------
+17:09:13.848 -> The RTC datetime: 2025-05-10T17:09:13
+

@@ -31,11 +31,24 @@ onto the led matrix. I made some changes to the definition of the led matrix
 characters '-' and ':'.
 
 
-- Added folder R5WiFi_AHT20_to_led_matrix.
+- Added folder R4WiFi_AHT20_to_led_matrix.
 - In this folder added:
   - the sketch: R4WiFi_AHT20_to_led_matrix.ino.
 
 This example reads the temperature and humidity values from an Adafruit AHT20 sensor
 and displays the values to the led matrix.
 
+# Updates
+
+2025-05-10 Added folder R4WiFi_RTC_NTP_joy-it_LCD1.28R
+ In this folder added:
+  - the sketch: SBC_LCD1_28R_Arduino_NTP_Clock_Example.ino.
+  - the file adafruit_secrets.h.
+
+This example, like the example ```R4WiFi_RTC_NTPsync_to_led_matrix``` gets a NTP datetime stamp,
+instead of printing the datetime to the led matrix of the Uno R4, the datetime is used to drive
+an analog clock onto the Joy-it round LCD of 1.28inches.
+In file ```adafruit_secrets.h``` you have to enter your ```WiFi SSID```, ```PASSWORD``` and ```TIMEZONE_OFFSET```. The latter represents the value in hours, for example Europe/Lisbon will have a TIMEZONE_OFFSET = "1" (1 hour).
+- Added also a folder ```images``` with some images of this project version.
+- Added a folder ```docs```. In it a monitor output text files for this project version.
 
