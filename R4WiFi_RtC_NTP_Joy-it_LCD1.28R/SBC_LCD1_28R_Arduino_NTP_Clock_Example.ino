@@ -559,8 +559,12 @@ bool lStart2 = true;
 void loop() {
     if (lStart) {
         Serial.print(F("RTC sync from NTP interval: "));
-        Serial.print(I_NTP_SYNC / 60000);
-        Serial.println(F(" minutes"));
+        int ntp_interval = I_NTP_SYNC / 60000;
+        Serial.print(ntp_interval);
+        if (ntp_interval <= 1)
+            Serial.println(F(" minute"));
+        else
+            Serial.println(F(" minutes"));
     }
     c_time = millis();
     d_time = c_time - s_time; 

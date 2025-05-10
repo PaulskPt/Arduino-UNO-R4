@@ -46,28 +46,26 @@ Serial monitor output:
 ----------------------------------------------
 After change of NTP sync interval to 1 minute:
 ----------------------------------------------
-18:37:41.517 -> Connected to WiFi
-18:37:41.517 -> SSID: Vodafone-8D96F1
-18:37:41.560 -> IP Address: 192.168.1.75
-18:37:41.560 -> signal strength (RSSI):-40 dBm
-18:37:41.560 -> 
-18:37:41.560 -> Starting connection to NTP server...
-18:37:41.560 -> Timezone offset in hours: 1
-18:37:42.573 -> packet with unixtime received
-18:37:42.614 -> sync_ntp(): Unix time = 1746902262
-18:37:42.614 -> sync_ntp(): RTC set to: 2025-05-10T18:37:42
-18:37:43.470 -> RTC sync from NTP interval: 1 minutes
-18:37:43.470 -> -------------------------------------
-18:37:43.470 -> The RTC datetime: 2025-05-10T18:37:42
-18:38:32.520 -> packet with unixtime received
-18:38:32.559 -> sync_ntp(): Unix time = 1746902311
-18:38:32.559 -> sync_ntp(): RTC set to: 2025-05-10T18:38:31
-18:39:32.606 -> packet with unixtime received
-18:39:32.638 -> sync_ntp(): Unix time = 1746902372
-18:39:32.638 -> sync_ntp(): RTC set to: 2025-05-10T18:39:32
-18:40:32.690 -> packet with unixtime received
-18:40:32.736 -> sync_ntp(): Unix time = 1746902432
-18:40:32.736 -> sync_ntp(): RTC set to: 2025-05-10T18:40:32
-18:41:32.815 -> packet with unixtime received
-18:41:32.815 -> sync_ntp(): Unix time = 1746902492
-18:41:32.815 -> sync_ntp(): RTC set to: 2025-05-10T18:41:32
+19:17:23.001 -> Connected to WiFi
+19:17:23.001 -> SSID: Vodafone-8D96F1
+19:17:23.001 -> IP Address: 192.168.1.75
+19:17:23.049 -> signal strength (RSSI):-40 dBm
+19:17:23.049 -> 
+19:17:23.049 -> Starting connection to NTP server...
+19:17:23.049 -> Timezone offset in hours: 1
+19:17:24.050 -> 
+19:17:24.050 -> getUnixTime(): packet with unixtime received
+19:17:24.085 -> sync_ntp(): Unix time = 1746904643
+19:17:24.085 -> sync_ntp(): RTC set to: 2025-05-10T19:17:23
+19:17:24.933 -> RTC sync from NTP interval: 1 minute
+19:17:24.933 -> -------------------------------------
+19:17:24.933 -> The RTC datetime: 2025-05-10T19:17:24
+19:17:24.933 -> -------------------------------------
+19:18:13.949 -> 
+19:18:13.949 -> getUnixTime(): packet with unixtime received
+19:18:13.949 -> sync_ntp(): Unix time = 1746904693
+19:18:13.949 -> sync_ntp(): RTC set to: 2025-05-10T19:18:13
+19:19:14.037 -> 
+19:19:14.037 -> getUnixTime(): packet with unixtime received
+19:19:14.037 -> sync_ntp(): Unix time = 1746904753
+19:19:14.037 -> sync_ntp(): RTC set to: 2025-05-10T19:19:13
