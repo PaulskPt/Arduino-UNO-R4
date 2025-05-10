@@ -45,6 +45,8 @@ and displays the values to the led matrix.
   - the sketch: SBC_LCD1_28R_Arduino_NTP_Clock_Example.ino.
   - the file adafruit_secrets.h.
 
+See: [video](https://imgur.com/a/OnuIZSf)
+
 This example, like the example ```R4WiFi_RTC_NTPsync_to_led_matrix``` gets a NTP datetime stamp,
 instead of printing the datetime to the led matrix of the Uno R4, the datetime is used to drive
 an analog clock onto the Joy-it round LCD of 1.28inches.
