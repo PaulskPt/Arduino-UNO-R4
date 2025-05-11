@@ -1,7 +1,0 @@
-
-Text and link from video posted on Imgur on 2025-05-10 
-
-"Arduino Uno R4 WiFi with Joy-it LCD 1.28R clock"
-"Analog Clock. Every minute synced from NTP server online"
-
-Imgur: https://imgur.com/a/OnuIZSf
