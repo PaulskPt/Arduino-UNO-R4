@@ -20,6 +20,7 @@
 
 #include <Time.h>
 #include <TimeLib.h>
+#include <stdio.h>
 #include "RTC.h"
 #include <NTPClient.h>
 #include <string.h>
@@ -38,7 +39,6 @@
 #endif
 // #define my_debug  (1)
 
-#define TZ_OFFSET -4  // 1 For Portugal; -4 for NY, USA etc...
 #define BANNER_LEN 50
 #define BANNER1 0
 #define BANNER2 1
@@ -54,6 +54,8 @@ uint8_t txt_shown = BANNER1;
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = SECRET_SSID;        // your network SSID (name)
 char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
+char timezoneOffsetStr[] = SECRET_TIMEZONE_OFFSET; // 1 For Portugal; -4 for NY, USA etc...
+int TZ_OFFSET; // your timezone offset
 
 constexpr unsigned int LOCAL_PORT = 2390;      // local port to listen for UDP packets
 //constexpr int NTP_PACKET_SIZE = 48; // NTP timestamp is in the first 48 bytes of the message
@@ -549,6 +551,13 @@ void setup(void)
   // Ready...
   t_prev = millis();
   // Go!
+
+  if (sscanf(timezoneOffsetStr, "%d", &TZ_OFFSET) == 1) {
+        Serial.print(F("Timezone offset in hours: "));
+        Serial.println(TZ_OFFSET);
+    } else {
+        Serial.print(F("Invalid input!\n"));
+    }
 
   connectToWiFi();
   Serial.println("\nStarting connection to server...");
