@@ -27,6 +27,8 @@
  * Seeeduino XIAO dev board    : TFT_CS:  3, TFT_DC:  2, TFT_RST:  1, TFT_BL:  0
  * Teensy 4.1 dev board        : TFT_CS: 39, TFT_DC: 41, TFT_RST: 40, TFT_BL: 22
  ******************************************************************************/
+// Uncomment to route Serial to pins 0 & 1.
+//#define NO_USB
 #include <Arduino_GFX_Library.h>
 
 #include <Time.h>
