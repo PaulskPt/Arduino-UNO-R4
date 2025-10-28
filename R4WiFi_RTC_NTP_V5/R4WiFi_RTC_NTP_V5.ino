@@ -28,7 +28,7 @@
  * Update 2025-10-24:
  * Added board unique ID as BANNER4 (using the 107-Arduino-UniqueId library repo)
  * https://github.com/107-systems/107-Arduino-UniqueId
- * Update 2025-10-27. Added dst awarenesss for years 2025-2028 (for Portugal timezone)
+ * Update 2025-10-27. Added dst awarenesss for years 2025-2028 (for Portugal timezone). See DstPeriod map.
  */
 
 #include <RTC.h>
