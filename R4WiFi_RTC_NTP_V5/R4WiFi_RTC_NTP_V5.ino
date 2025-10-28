@@ -173,9 +173,6 @@ std::map<std::string, DstPeriod> dst_start_end = {
 };
 #endif
 
-// start now time variable in seconds
-int time_now = now();
-
 int wifiStatus = WL_IDLE_STATUS;
 
 WiFiUDP Udp; // A UDP instance to let us send and receive packets over UDP
