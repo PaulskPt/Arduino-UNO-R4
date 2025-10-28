@@ -32,7 +32,7 @@
  */
 
 #include <RTC.h>
-//#include "C:\Users\PaulS2\AppData\Local\Arduino15\packages\arduino\hardware\renesas_uno\1.5.1\libraries\RTC\src\RTC.h"
+//#include "C:\Users\<User>\AppData\Local\Arduino15\packages\arduino\hardware\renesas_uno\1.5.1\libraries\RTC\src\RTC.h"
 #include <Arduino.h>
 #include <107-Arduino-UniqueId.h>
 #include <Time.h>
